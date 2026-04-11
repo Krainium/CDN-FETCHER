@@ -1,24 +1,24 @@
 # CDN Fetcher
 
-An interactive command-line tool that fetches official IP ranges (CIDR blocks) from 20+ major CDN and cloud providers, with the ability to expand those ranges into individual IP addresses.
+Interactive CLI tool that fetches official IP ranges (CIDR blocks) from 20+ major CDN and cloud providers, with the option to expand those ranges into individual IP addresses.
 
 ---
 
-## Aim
+## What It Does
 
-The aim of CDN Fetcher is to give security engineers, network administrators, and researchers a single, reliable tool to pull live, authoritative IP range data directly from provider APIs — no stale third-party databases, no manual copying. Once fetched, ranges can be expanded into flat IP lists suitable for firewall rules, allowlists, blocklists, threat intelligence pipelines, or any tooling that works with plain IP addresses.
+Pulls live, authoritative IP range data directly from provider APIs — no stale third-party databases, no manual copying. Fetched ranges can be expanded into flat IP lists for firewall rules, allowlists, blocklists, threat intelligence pipelines, or any tooling that works with plain IP addresses.
 
 ---
 
 ## Features
 
 - Fetches CIDR blocks live from each provider's official public API or published source
-- Supports 20+ providers including major CDNs, cloud platforms, crawlers, and messaging services
+- 20+ providers — major CDNs, cloud platforms, crawlers, messaging services
 - Interactive menu — pick one provider, search by name, or fetch all at once
 - Saves CIDR blocks to `cdn-ranges/<provider>.txt`
-- Optionally expands IPv4 CIDR ranges into individual IP addresses, saved to `cdn-ranges/<provider>_ips.txt`
+- Optionally expands IPv4 CIDR ranges into individual IPs, saved to `cdn-ranges/<provider>_ips.txt`
 - Progress reporting with IP count estimates and file sizes
-- IPv6 ranges are fetched and saved but skipped during IP expansion (address space is too large to enumerate)
+- IPv6 ranges are fetched and saved but skipped during expansion (address space too large to enumerate)
 - Large expansions (>10 million IPs) require explicit confirmation before writing
 
 ---
@@ -46,30 +46,28 @@ The aim of CDN Fetcher is to give security engineers, network administrators, an
 | 17 | Googlebot | Google web crawler IP ranges |
 | 18 | Google Special Crawlers | AdsBot, Feedfetcher, and other special-purpose crawlers |
 | 19 | Google User-Triggered Fetchers | Site Preview and other user-triggered fetcher IPs |
-| 20 | JD Cloud (China) | JD Cloud CDN (note: no public API — ASN lookup recommended) |
+| 20 | JD Cloud (China) | JD Cloud CDN (no public API — ASN lookup recommended) |
 
 ---
 
 ## Requirements
 
-- Node.js 18 or later
-- No external npm dependencies — uses only Node.js built-in modules (`https`, `http`, `fs`, `path`, `readline`)
+- Node.js 18+
+- No external dependencies — uses only Node.js built-ins (`https`, `http`, `fs`, `path`, `readline`)
 
 ---
 
 ## Usage
 
-Run the script directly:
-
 ```bash
 node cdn.js
 ```
 
-You will be presented with an interactive menu listing all providers. You can:
+From the interactive menu:
 
-- Enter a **number** to select a specific provider
+- Enter a **number** to select a provider
 - Enter a **name or partial name** to search (e.g. `cloudflare`, `aws`, `google`)
-- Enter `a` to fetch **all providers** at once
+- Enter `a` to fetch all providers at once
 - Enter `q` to quit
 
 ### Example session
@@ -104,19 +102,19 @@ You will be presented with an interactive menu listing all providers. You can:
 
 ## Output
 
-All output files are written to a `cdn-ranges/` directory created in your current working directory.
+All files are written to a `cdn-ranges/` directory in your current working directory.
 
 | File | Contents |
 |------|----------|
 | `cdn-ranges/<provider>.txt` | One CIDR block per line (IPv4 and IPv6) |
-| `cdn-ranges/<provider>_ips.txt` | One IPv4 address per line (only created if you choose to expand) |
+| `cdn-ranges/<provider>_ips.txt` | One IPv4 address per line (only if expansion is chosen) |
 
 ---
 
 ## Notes
 
-- All IP data is fetched live at runtime from each provider's official source. No cached or bundled data is used.
-- IPv6 ranges are included in the CIDR output files but are not expanded to individual IPs.
-- JD Cloud does not publish a public IP range API. The tool will warn you and suggest using an ASN lookup tool (e.g. `bgp.he.net` for ASN AS37963).
+- All data is fetched live at runtime from each provider's official source. No cached or bundled data.
+- IPv6 ranges are included in CIDR output but are not expanded to individual IPs.
+- JD Cloud does not publish a public IP range API. The tool warns you and suggests using an ASN lookup tool (e.g. `bgp.he.net` for ASN AS37963).
 - Requests include a standard browser `User-Agent` header and follow HTTP redirects automatically.
-- Network timeouts are set to 15 seconds per request.
+- Network timeout is 15 seconds per request.
